@@ -1,42 +1,56 @@
 import math
 
+def make_translate( x, y, z ):
+    pass
+
+def make_scale( x, y, z ):
+    pass
+
+def make_rotX( theta ):    
+    pass
+
+def make_rotY( theta ):
+    pass
+
+def make_rotZ( theta ):
+    pass
 
 def print_matrix( matrix ):
-    retStr = "";
-    for i in range(len(matrix)):
-        #print the left border
-        retStr += "|"
-        #print the row, except for the last number
-        for j in range(len(matrix[i]) - 1):
-            retStr += str(matrix[i][j]) + "\t"
-        #print last number without tab
-        retStr += str(matrix[i][j])
-        #print right border with newline
-        retStr += "|\n"
-    #get rid of last newline
-    print retStr[:-1]
-    
+    s = ''
+    for r in range( len( matrix[0] ) ):
+        for c in range( len(matrix) ):
+            s+= str(matrix[c][r]) + ' '
+        s+= '\n'
+    print s
+
 def ident( matrix ):
-    for row in range(len(matrix)):
-        for column in range(len(matrix[row])):
-            if row == column:
-                matrix[row][column] = 1
+    for r in range( len( matrix[0] ) ):
+        for c in range( len(matrix) ):
+            if r == c:
+                matrix[c][r] = 1
             else:
-                matrix[row][column] = 0
+                matrix[c][r] = 0
 
 def scalar_mult( matrix, s ):
-    for row in range(len(matrix)):
-        for column in range(len(matrix)):
-            matrix[row][column] *= s
-
+    for r in range( len( matrix[0] ) ):
+        for c in range( len(matrix) ):
+            matrix[c][r]*= s
+            
 #m1 * m2 -> m2
 def matrix_mult( m1, m2 ):
-    for column in range(len(m2[0])):
-        for row in range(len(m2)):
-            total = 0
-            for i in range(len(m1[row])):
-                total += m1[row][i] * m2[i][column]
-            m2[row][column] = total
+
+    point = 0
+    for row in m2:
+        #get a copy of the next point
+        tmp = row[:]
+        
+        for r in range(4):
+            m2[point][r] = (m1[0][r] * tmp[0] +
+                            m1[1][r] * tmp[1] +
+                            m1[2][r] * tmp[2] +
+                            m1[3][r] * tmp[3])
+        point+= 1
+
 
 def new_matrix(rows = 4, cols = 4):
     m = []
@@ -45,4 +59,3 @@ def new_matrix(rows = 4, cols = 4):
         for r in range( rows ):
             m[c].append( 0 )
     return m
-
