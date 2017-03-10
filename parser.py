@@ -32,4 +32,70 @@ The file follows the following format:
 See the file script for an example of the file format
 """
 def parse_file( fname, points, transform, screen, color ):
-    pass
+    script = open(fname, "r");
+    line = script.readline().strip()
+    while line != "" and line != "quit":
+        line = line.strip()
+        if line == "line":
+            data = script.readline().strip().split(" ")
+            if len(data) != 6:
+                print "Bad line."
+            else:
+                print "Adding line."
+                add_edge(points, int(data[0]), int(data[1]), int(data[2]), int(data[3]), int(data[4]), int(data[5]))
+        elif line == "ident":
+            print "Identity matrix."
+            ident(transform);
+        elif line == "scale":
+            data = script.readline().strip().split(" ")
+            if len(data) != 3:
+                "Bad scale."
+            else:
+                print "Scaling."
+                scale = make_scale(int(data[0]), int(data[1]), int(data[2]))
+                matrix_mult(scale, transform)
+        elif line == "move":
+            data = script.readline().strip().split(" ")
+            if len(data) != 3:
+                print "Bad move."
+            else:
+                print "Moving."
+                move = make_translate(int(data[0]), int(data[1]), int(data[2]))
+                matrix_mult(move, transform)
+        elif line == "rotate":
+            data = script.readline().strip().split(" ")
+            if len(data) != 2:
+                print "Bad rotate."
+            else:
+                print "Rotating."
+                if data[0] == "x":
+                    rotate = make_rotX(int(data[1]))
+                    matrix_mult(rotate, transform)
+                elif data[0] == "y":
+                    rotate = make_rotY(int(data[1]))
+                    matrix_mult(rotate, transform)
+                elif data[0] == "z":
+                    rotate = make_rotZ(int(data[1]))
+                    matrix_mult(rotate, transform)
+                else:
+                    print "Bad axis."
+        elif line == "apply":
+            print "Applying."
+            matrix_mult(transform, points)
+        elif line == "display":
+            clear_screen(screen)
+            draw_lines(points, screen, color)
+            display(screen)
+        elif line == "save":
+            data = script.readline().strip().split(" ")
+            if len(data) != 1:
+                print "No filename."
+            else:
+                clear_screen(screen)
+                draw_lines(points, screen, color)
+                display(screen)
+                save_extension(screen, data[0])
+        else:
+            print "Bad command."
+            break
+        line = script.readline().strip()
